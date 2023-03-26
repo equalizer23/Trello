@@ -3,6 +3,7 @@ package com.example.trello.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.Toolbar
+import com.bumptech.glide.Glide
 import com.example.trello.R
 import com.example.trello.activities.BaseActivity
 import com.example.trello.databinding.ActivityProfileBinding
@@ -17,6 +18,23 @@ class ProfileActivity : BaseActivity() {
         setContentView(binding?.root)
 
         setupActionBar()
+        FireStoreClass().loadUserData(this)
+    }
+
+    fun setUserDataInUI(user: User){
+        Glide
+            .with(this)
+            .load(user.image)
+            .centerCrop()
+            .placeholder(R.drawable.ic_user_place_holder)
+            .into(binding?.userImage!!)
+
+        binding?.etName?.setText(user.name)
+        binding?.etEmail?.setText(user.email)
+        if (user.mobile != 0L){
+            binding?.etMobile?.setText(user.mobile.toString())
+        }
+
     }
 
 

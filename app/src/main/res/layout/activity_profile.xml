@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity"
+    tools:context=".activities.ProfileActivity"
     android:orientation="vertical"
     android:background="@drawable/ic_background">
 
@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background = "@color/colorPrimary"
-            app:popupTheme="@style/PopupOverlay"/>
+            app:popupTheme="@style/PopupOverlay"
+            app:titleTextColor="@color/white"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -54,6 +55,7 @@
                     android:id="@+id/user_image"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginStart="@dimen/nav_content_margin_StartEnd"
                     android:layout_marginEnd="@dimen/nav_content_margin_StartEnd"
                     app:civ_border_color="@color/white"
@@ -90,7 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email"
-                        android:inputType="none"
+                        android:focusable="false"
                         android:textColorHint="@color/secondary_text_color"
                         android:theme="@style/MyEditTextTheme" />
 
@@ -109,14 +111,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Mobile"
-                        android:inputType="none"
+                        android:inputType="numberDecimal"
                         android:textColorHint="@color/secondary_text_color"
-                        android:theme="@style/MyEditTextTheme" />
+                        android:theme="@style/MyEditTextTheme"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/btn_"
+                    android:id="@+id/btn_update"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
@@ -125,7 +127,6 @@
                     android:textColor="@color/white"
                     android:textSize="20sp"
                     app:backgroundTint="@null" />
-
 
             </LinearLayout>
 

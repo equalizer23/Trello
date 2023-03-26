@@ -1,7 +1,6 @@
 package com.example.trello.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
@@ -53,7 +52,8 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.nav_my_profile ->{
-                showToast("My Profile")
+                val intent = Intent(this, ProfileActivity::class.java)
+                startActivity(intent)
             }
             R.id.nav_sign_out ->{
                 FirebaseAuth.getInstance().signOut()

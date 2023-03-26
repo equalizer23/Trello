@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.IntroActivity"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:paddingStart="@dimen/ll_intro_padding"
+    android:paddingEnd="@dimen/ll_intro_padding"
+    android:background="@drawable/intro_background">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textStyle="bold"
+        android:textSize="@dimen/intro_screen_title_text_size"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_task_image"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Let's get started"
+        android:textStyle="bold"
+        android:textSize="25sp"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Collaborate and Plan Together Across Multiple"
+        android:textSize="16sp"
+        android:textColor="@color/secondary_text_color"
+        android:layout_marginTop="10dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Devices on Trello's Minimalist Interface"
+        android:textSize="16sp"
+        android:textColor="@color/secondary_text_color"/>
+
+    <Button
+        android:id="@+id/btn_sign_in"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SIGN IN"
+        android:textColor="@color/white"
+        app:backgroundTint="@null"
+        android:textSize="25sp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/sign_in_button_background"/>
+
+    <Button
+        android:id="@+id/btn_sign_up"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SIGN UP"
+        app:backgroundTint="@null"
+        android:foreground="?attr/selectableItemBackground"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/sign_up_button_background"/>
+
+
+
+
+
+</LinearLayout>

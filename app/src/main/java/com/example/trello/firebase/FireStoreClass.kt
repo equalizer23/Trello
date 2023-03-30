@@ -1,7 +1,9 @@
 package com.example.trello.firebase
 
 import android.app.Activity
+import android.net.Uri
 import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import com.example.trello.activities.*
 import com.example.trello.constants.Constants
@@ -49,6 +51,7 @@ class FireStoreClass : BaseActivity(){
                 Log.e(activity.javaClass.simpleName, "Error", e)
             }
     }
+
 
     fun getCurrentUserId(): String {
         val currentUser = FirebaseAuth.getInstance().currentUser

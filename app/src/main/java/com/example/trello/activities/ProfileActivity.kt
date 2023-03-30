@@ -10,6 +10,8 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
@@ -18,6 +20,8 @@ import com.example.trello.activities.BaseActivity
 import com.example.trello.databinding.ActivityProfileBinding
 import com.example.trello.firebase.FireStoreClass
 import com.example.trello.models.User
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -31,7 +35,8 @@ import java.util.*
 
 class ProfileActivity : BaseActivity() {
     private var binding: ActivityProfileBinding? = null
-    private var saveImageToInternalStorage: Uri? = null
+    private var mSelectedImageUri: Uri? = null
+    private  var mProfileImageURL: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
@@ -56,6 +61,47 @@ class ProfileActivity : BaseActivity() {
             binding?.etMobile?.setText(user.mobile.toString())
         }
 
+    }
+
+    private fun getFileExtension(uri: Uri?) : String?{
+        return MimeTypeMap.getSingleton()
+            .getExtensionFromMimeType(contentResolver.getType(uri!!))
+    }
+
+    private fun uploadUserImage(){
+        showProgressDialog()
+
+        if(mSelectedImageUri != null){
+            val sRef: StorageReference =
+                FirebaseStorage.getInstance()
+                    .reference.child("USER_IMAGE" + System.currentTimeMillis()
+                            + "." + getFileExtension(mSelectedImageUri))
+
+            sRef.putFile(mSelectedImageUri!!).addOnSuccessListener {
+                Log.i(
+                    "Firebase Image URl",
+                    it.metadata!!.reference!!.downloadUrl.toString()
+                )
+                it.metadata!!.reference!!.downloadUrl.addOnSuccessListener {
+                    uri ->
+                    Log.e("Download Image Uri", uri.toString())
+                    mProfileImageURL = uri.toString()
+                    hideProgressBar()
+                }
+            }.addOnFailureListener{
+                exception ->
+                showToast("${exception.message}")
+                hideProgressBar()
+            }
+        }
+    }
+
+    private fun buttonUpdate(){
+        binding?.btnUpdate?.setOnClickListener {
+            if(mSelectedImageUri != null){
+                uploadUserImage()
+            }
+        }
     }
 
     private fun choosePhotoFromGallery() {
@@ -106,11 +152,11 @@ class ProfileActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GALLERY) {
             if (data != null) {
-                saveImageToInternalStorage = data.data
+                mSelectedImageUri = data.data
                 try {
                     Glide
                         .with(this)
-                        .load(Uri.parse(saveImageToInternalStorage.toString()))
+                        .load(Uri.parse(mSelectedImageUri.toString()))
                         .centerCrop()
                         .placeholder(R.drawable.ic_user_place_holder)
                         .into(binding?.userImage!!)

@@ -1,5 +1,6 @@
 package com.example.trello.activities
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -102,6 +103,8 @@ class ProfileActivity : BaseActivity() {
             this,
             "Profile Updated Successfully",
             Toast.LENGTH_LONG).show()
+
+        setResult(Activity.RESULT_OK)
         finish()
     }
 

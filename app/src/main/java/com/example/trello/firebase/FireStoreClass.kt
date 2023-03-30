@@ -53,6 +53,20 @@ class FireStoreClass : BaseActivity(){
     }
 
 
+    fun updateUserProfileData(activity: ProfileActivity, userHashMap: HashMap<String, Any>){
+        mFireStore.collection(Constants.USERS)
+            .document(getCurrentUserId())
+            .update(userHashMap)
+            .addOnSuccessListener {
+                activity.profileUpdateSuccess()
+
+            }.addOnFailureListener {
+                hideProgressBar()
+
+                activity.profileUpdatedFailure()
+            }
+    }
+
     fun getCurrentUserId(): String {
         val currentUser = FirebaseAuth.getInstance().currentUser
         var currentUserID = ""

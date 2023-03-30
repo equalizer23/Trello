@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.example.trello.R
 import com.example.trello.activities.BaseActivity
+import com.example.trello.constants.Constants
 import com.example.trello.databinding.ActivityProfileBinding
 import com.example.trello.firebase.FireStoreClass
 import com.example.trello.models.User
@@ -32,11 +33,14 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import java.util.*
+import kotlin.collections.HashMap
 
 class ProfileActivity : BaseActivity() {
     private var binding: ActivityProfileBinding? = null
     private var mSelectedImageUri: Uri? = null
+    private var mUserDetails: User? = null
     private  var mProfileImageURL: String = ""
+    private var anyChangesMade = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityProfileBinding.inflate(layoutInflater)
@@ -45,6 +49,30 @@ class ProfileActivity : BaseActivity() {
         setupActionBar()
         onClickAddImage()
         FireStoreClass().loadUserData(this)
+        buttonUpdate()
+    }
+
+    private fun updateUserProfileData(){
+        var userHashMap = HashMap<String, Any>()
+        if(mProfileImageURL.isNotEmpty() && mProfileImageURL != mUserDetails?.image){
+            userHashMap[Constants.IMAGE] = mProfileImageURL
+            anyChangesMade = true
+
+        }
+
+        if(binding?.etName?.text.toString() != mUserDetails?.name){
+            userHashMap[Constants.NAME] = binding?.etName?.text.toString()
+            anyChangesMade = true
+        }
+
+        if(binding?.etMobile?.text.toString() != mUserDetails?.mobile.toString()){
+            userHashMap[Constants.MOBILE] = binding?.etMobile?.text.toString().toLong()
+            anyChangesMade = true
+        }
+
+        if(anyChangesMade){
+            FireStoreClass().updateUserProfileData(this, userHashMap)
+        }
     }
 
     fun setUserDataInUI(user: User){
@@ -68,6 +96,25 @@ class ProfileActivity : BaseActivity() {
             .getExtensionFromMimeType(contentResolver.getType(uri!!))
     }
 
+    fun profileUpdateSuccess(){
+        hideProgressBar()
+        Toast.makeText(
+            this,
+            "Profile Updated Successfully",
+            Toast.LENGTH_LONG).show()
+        finish()
+    }
+
+    fun profileUpdatedFailure(){
+        hideProgressBar()
+        Toast.makeText(
+            this,
+            "Error while updating a profile",
+            Toast.LENGTH_LONG).show()
+        finish()
+
+    }
+
     private fun uploadUserImage(){
         showProgressDialog()
 
@@ -86,11 +133,14 @@ class ProfileActivity : BaseActivity() {
                     uri ->
                     Log.e("Download Image Uri", uri.toString())
                     mProfileImageURL = uri.toString()
-                    hideProgressBar()
+                    updateUserProfileData()
                 }
             }.addOnFailureListener{
                 exception ->
-                showToast("${exception.message}")
+                Toast.makeText(
+                    this,
+                    "${exception.message}",
+                    Toast.LENGTH_LONG).show()
                 hideProgressBar()
             }
         }
@@ -100,6 +150,10 @@ class ProfileActivity : BaseActivity() {
         binding?.btnUpdate?.setOnClickListener {
             if(mSelectedImageUri != null){
                 uploadUserImage()
+            }else{
+                showProgressDialog()
+
+                updateUserProfileData()
             }
         }
     }

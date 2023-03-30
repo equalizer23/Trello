@@ -39,18 +39,15 @@ open class BaseActivity : AppCompatActivity() {
         }
         else{
             this.doubleBackToExitPress = true
-            showToast("Please click back again to exit")
+            Toast.makeText(
+                this,
+                "Please click back again to exit",
+                Toast.LENGTH_LONG).show()
         }
 
         Handler().postDelayed({doubleBackToExitPress = false}, 2000)
     }
 
-    fun showToast(text: String){
-        Toast.makeText(
-            this,
-            "$text",
-            Toast.LENGTH_LONG).show()
-    }
 
     fun showErrorSnackBar(message: String) {
         val snackBar =

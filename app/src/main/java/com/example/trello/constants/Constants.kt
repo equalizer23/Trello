@@ -6,4 +6,8 @@ object Constants {
     const val MOBILE: String = "mobile"
     const val NAME: String = "name"
 
+    const val BOARDS: String = "boards"
+
+    const val GALLERY: Int = 1
+
 }

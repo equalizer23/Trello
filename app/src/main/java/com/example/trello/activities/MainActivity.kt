@@ -11,6 +11,7 @@ import androidx.core.view.GravityCompat
 import com.bumptech.glide.Glide
 import com.example.trello.CreateBordActivity
 import com.example.trello.R
+import com.example.trello.constants.Constants
 import com.example.trello.databinding.ActivityMainBinding
 import com.example.trello.firebase.FireStoreClass
 import com.example.trello.models.User
@@ -21,6 +22,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var binding: ActivityMainBinding? = null
+    private lateinit var mUserName: String
 
     companion object{
         const val MY_PROFILE_REQUEST_CODE: Int = 11
@@ -42,6 +44,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         val fabAddBoard: FloatingActionButton = findViewById(R.id.fab_add_board)
         fabAddBoard.setOnClickListener{
             val intent = Intent(this, CreateBordActivity::class.java)
+            intent.putExtra(Constants.NAME, mUserName)
             startActivity(intent)
         }
     }
@@ -100,6 +103,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     fun updateNavigationUserData(user: User) {
         val navUserImage: CircleImageView = findViewById(R.id.nav_user_image)
         val tvUsername: TextView = findViewById(R.id.tv_username)
+        mUserName = user.name
         Glide
             .with(this)
             .load(user.image)

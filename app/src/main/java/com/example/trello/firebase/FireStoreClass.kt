@@ -5,8 +5,10 @@ import android.net.Uri
 import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
+import com.example.trello.CreateBordActivity
 import com.example.trello.activities.*
 import com.example.trello.constants.Constants
+import com.example.trello.models.Board
 import com.example.trello.models.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,6 +23,18 @@ class FireStoreClass : BaseActivity(){
             .document(getCurrentUserId()).set(userInfo)
             .addOnSuccessListener {
                 activity.userRegisteredSuccess()
+                Log.e("Success", "Success")
+            }.addOnFailureListener { e ->
+                activity.hideProgressBar()
+                Log.e(activity.javaClass.simpleName, "Error", e)
+            }
+    }
+
+    fun createBoard(activity: CreateBordActivity, board: Board){
+        mFireStore.collection(Constants.BOARDS)
+            .document().set(board, SetOptions.merge())
+            .addOnSuccessListener {
+                activity.boardCreatedSuccessfully()
                 Log.e("Success", "Success")
             }.addOnFailureListener { e ->
                 activity.hideProgressBar()
@@ -67,12 +81,4 @@ class FireStoreClass : BaseActivity(){
             }
     }
 
-    fun getCurrentUserId(): String {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        var currentUserID = ""
-        if(currentUser != null){
-            currentUserID = currentUser.uid
-        }
-        return currentUserID
-    }
 }

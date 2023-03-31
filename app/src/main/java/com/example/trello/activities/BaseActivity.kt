@@ -61,4 +61,13 @@ open class BaseActivity : AppCompatActivity() {
         )
         snackBar.show()
     }
+
+    fun getCurrentUserId(): String {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        var currentUserID = ""
+        if(currentUser != null){
+            currentUserID = currentUser.uid
+        }
+        return currentUserID
+    }
 }

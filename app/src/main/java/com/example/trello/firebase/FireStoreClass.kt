@@ -2,11 +2,11 @@ package com.example.trello.firebase
 
 import android.app.Activity
 import android.util.Log
-import android.widget.Toast
+import com.example.trello.activities.CreateBordActivity
 import com.example.trello.activities.*
 import com.example.trello.constants.Constants
+import com.example.trello.models.Board
 import com.example.trello.models.User
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 
@@ -26,7 +26,19 @@ class FireStoreClass : BaseActivity(){
             }
     }
 
-    fun signInUser(activity: Activity) {
+    fun createBoard(activity: CreateBordActivity, board: Board){
+        mFireStore.collection(Constants.BOARDS)
+            .document().set(board, SetOptions.merge())
+            .addOnSuccessListener {
+                activity.boardCreatedSuccessfully()
+                Log.e("Success", "Success")
+            }.addOnFailureListener { e ->
+                activity.hideProgressBar()
+                Log.e(activity.javaClass.simpleName, "Error", e)
+            }
+    }
+
+    fun loadUserData(activity: Activity) {
         mFireStore.collection(Constants.USERS)
             .document(getCurrentUserId()).get()
             .addOnSuccessListener { document ->
@@ -39,6 +51,9 @@ class FireStoreClass : BaseActivity(){
                     is MainActivity ->{
                         activity.updateNavigationUserData(loggedInUser)
                     }
+                    is ProfileActivity ->{
+                        activity.setUserDataInUI(loggedInUser)
+                    }
 
                 }
             }.addOnFailureListener { e ->
@@ -47,12 +62,19 @@ class FireStoreClass : BaseActivity(){
             }
     }
 
-    fun getCurrentUserId(): String {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        var currentUserID = ""
-        if(currentUser != null){
-            currentUserID = currentUser.uid
-        }
-        return currentUserID
+
+    fun updateUserProfileData(activity: ProfileActivity, userHashMap: HashMap<String, Any>){
+        mFireStore.collection(Constants.USERS)
+            .document(getCurrentUserId())
+            .update(userHashMap)
+            .addOnSuccessListener {
+                activity.profileUpdateSuccess()
+
+            }.addOnFailureListener {
+                hideProgressBar()
+
+                activity.profileUpdatedFailure()
+            }
     }
+
 }

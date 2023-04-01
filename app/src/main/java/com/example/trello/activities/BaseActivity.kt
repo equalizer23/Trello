@@ -39,18 +39,15 @@ open class BaseActivity : AppCompatActivity() {
         }
         else{
             this.doubleBackToExitPress = true
-            showToast("Please click back again to exit")
+            Toast.makeText(
+                this,
+                "Please click back again to exit",
+                Toast.LENGTH_LONG).show()
         }
 
         Handler().postDelayed({doubleBackToExitPress = false}, 2000)
     }
 
-    fun showToast(text: String){
-        Toast.makeText(
-            this,
-            "$text",
-            Toast.LENGTH_LONG).show()
-    }
 
     fun showErrorSnackBar(message: String) {
         val snackBar =
@@ -63,5 +60,14 @@ open class BaseActivity : AppCompatActivity() {
             )
         )
         snackBar.show()
+    }
+
+    fun getCurrentUserId(): String {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        var currentUserID = ""
+        if(currentUser != null){
+            currentUserID = currentUser.uid
+        }
+        return currentUserID
     }
 }

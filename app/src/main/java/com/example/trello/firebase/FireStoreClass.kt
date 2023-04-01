@@ -38,7 +38,7 @@ class FireStoreClass : BaseActivity(){
             }
     }
 
-    fun loadUserData(activity: Activity) {
+    fun loadUserData(activity: Activity, readBoardsList: Boolean = false) {
         mFireStore.collection(Constants.USERS)
             .document(getCurrentUserId()).get()
             .addOnSuccessListener { document ->
@@ -49,7 +49,7 @@ class FireStoreClass : BaseActivity(){
                         activity.signInSuccess(loggedInUser)
                     }
                     is MainActivity ->{
-                        activity.updateNavigationUserData(loggedInUser)
+                        activity.updateNavigationUserData(loggedInUser, readBoardsList)
                     }
                     is ProfileActivity ->{
                         activity.setUserDataInUI(loggedInUser)
@@ -59,6 +59,26 @@ class FireStoreClass : BaseActivity(){
             }.addOnFailureListener { e ->
                 hideProgressBar()
                 Log.e(activity.javaClass.simpleName, "Error", e)
+            }
+    }
+
+    fun getBoardsList(activity: MainActivity){
+        mFireStore.collection(Constants.BOARDS)
+            .whereArrayContains(Constants.ASSIGNED_TO, getCurrentUserId())
+            .get()
+            .addOnSuccessListener {
+                document ->
+                val boardsList: ArrayList<Board> = ArrayList()
+                for (i in document.documents){
+                    val board = i.toObject(Board::class.java)!!
+                     board.documentID = i.id
+                    boardsList.add(board)
+                }
+
+                activity.populateBoardListToUI(boardsList)
+            }
+            .addOnFailureListener {
+                hideProgressBar()
             }
     }
 

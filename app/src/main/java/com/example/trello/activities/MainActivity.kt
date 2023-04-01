@@ -5,14 +5,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.trello.R
+import com.example.trello.adapters.BoardItemsAdapter
 import com.example.trello.constants.Constants
 import com.example.trello.databinding.ActivityMainBinding
 import com.example.trello.firebase.FireStoreClass
+import com.example.trello.models.Board
 import com.example.trello.models.User
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -34,8 +39,29 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setupActionBar()
         binding?.navView?.setNavigationItemSelectedListener(this)
 
-        FireStoreClass().loadUserData(this)
+        FireStoreClass().loadUserData(this, true)
         buttonAddBoard()
+
+    }
+
+    fun populateBoardListToUI(boardList: ArrayList<Board>){
+        hideProgressBar()
+        val rvBoards: RecyclerView = findViewById(R.id.rv_boards)
+        val tvNoRecords: TextView = findViewById(R.id.tv_no_boards_available)
+        if (boardList.size > 0){
+            rvBoards.visibility = View.VISIBLE
+            tvNoRecords.visibility = View.GONE
+            rvBoards.layoutManager = LinearLayoutManager(this)
+            rvBoards.setHasFixedSize(true)
+
+            val adapter: BoardItemsAdapter = BoardItemsAdapter(this, boardList)
+            rvBoards.adapter = adapter
+        }
+        else{
+            rvBoards.visibility = View.GONE
+            tvNoRecords.visibility = View.VISIBLE
+        }
+
 
     }
 
@@ -99,7 +125,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         doubleBackToExit()
     }
 
-    fun updateNavigationUserData(user: User) {
+    fun updateNavigationUserData(user: User, readBoardsList: Boolean) {
         val navUserImage: CircleImageView = findViewById(R.id.nav_user_image)
         val tvUsername: TextView = findViewById(R.id.tv_username)
         mUserName = user.name
@@ -111,6 +137,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             .into(navUserImage);
 
         tvUsername.text = user.name
+
+        if (readBoardsList){
+            showProgressDialog()
+            FireStoreClass().getBoardsList(this)
+        }
 
     }
 

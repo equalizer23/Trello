@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import com.bumptech.glide.Glide
-import com.example.trello.CreateBordActivity
 import com.example.trello.R
 import com.example.trello.constants.Constants
 import com.example.trello.databinding.ActivityMainBinding

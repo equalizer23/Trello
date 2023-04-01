@@ -1,19 +1,17 @@
-package com.example.trello
+package com.example.trello.activities
 
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import com.example.trello.activities.BaseActivity
-import com.example.trello.activities.ProfileActivity
+import com.example.trello.R
 import com.example.trello.constants.Constants
 import com.example.trello.databinding.ActivityCreateBordBinding
 import com.example.trello.firebase.FireStoreClass

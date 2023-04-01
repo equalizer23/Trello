@@ -1,16 +1,12 @@
 package com.example.trello.firebase
 
 import android.app.Activity
-import android.net.Uri
 import android.util.Log
-import android.webkit.MimeTypeMap
-import android.widget.Toast
-import com.example.trello.CreateBordActivity
+import com.example.trello.activities.CreateBordActivity
 import com.example.trello.activities.*
 import com.example.trello.constants.Constants
 import com.example.trello.models.Board
 import com.example.trello.models.User
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 

@@ -30,6 +30,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     companion object{
         const val MY_PROFILE_REQUEST_CODE: Int = 11
+        const val CREATE_BOARD_REQUEST_CODE = 12
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -56,6 +57,16 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
             val adapter: BoardItemsAdapter = BoardItemsAdapter(this, boardList)
             rvBoards.adapter = adapter
+
+            adapter.setOnClickListener(object: BoardItemsAdapter.OnClickListener{
+                override fun onClick(position: Int, model: Board) {
+                    val intent = Intent(this@MainActivity, TaskListActivity::class.java)
+
+                    intent.putExtra(Constants.DOCUMENT_ID, model.documentID)
+
+                    startActivity(intent)
+                }
+            })
         }
         else{
             rvBoards.visibility = View.GONE
@@ -65,12 +76,14 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     }
 
+
+
     private fun buttonAddBoard(){
         val fabAddBoard: FloatingActionButton = findViewById(R.id.fab_add_board)
         fabAddBoard.setOnClickListener{
             val intent = Intent(this, CreateBordActivity::class.java)
             intent.putExtra(Constants.NAME, mUserName)
-            startActivity(intent)
+            startActivityForResult(intent, CREATE_BOARD_REQUEST_CODE)
         }
     }
 
@@ -149,7 +162,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK && requestCode == MY_PROFILE_REQUEST_CODE){
             FireStoreClass().loadUserData(this)
-        }else{
+        }else if(resultCode == Activity.RESULT_OK && requestCode == CREATE_BOARD_REQUEST_CODE){
+            FireStoreClass().getBoardsList(this)
+        }
+
+        else{
             Log.e("Cancelled", "Cancelled")
         }
     }

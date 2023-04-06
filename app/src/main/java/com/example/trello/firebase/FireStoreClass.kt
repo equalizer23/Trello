@@ -82,6 +82,19 @@ class FireStoreClass : BaseActivity(){
             }
     }
 
+    fun getBoardDetails(activity: TaskListActivity, boardDocumentId: String){
+        mFireStore.collection(Constants.BOARDS)
+            .document(boardDocumentId)
+            .get()
+            .addOnSuccessListener {
+                    document ->
+                activity.boardDetails(document.toObject(Board::class.java)!!)
+            }
+            .addOnFailureListener {
+                hideProgressBar()
+            }
+    }
+
 
     fun updateUserProfileData(activity: ProfileActivity, userHashMap: HashMap<String, Any>){
         mFireStore.collection(Constants.USERS)

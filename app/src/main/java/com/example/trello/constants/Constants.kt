@@ -6,8 +6,14 @@ object Constants {
     const val MOBILE: String = "mobile"
     const val NAME: String = "name"
 
+    const val ASSIGNED_TO: String = "assignedTo"
+
+    const val DOCUMENT_ID: String = "document"
+
     const val BOARDS: String = "boards"
 
     const val GALLERY: Int = 1
+
+    const val TASK_LIST: String = "taskList"
 
 }

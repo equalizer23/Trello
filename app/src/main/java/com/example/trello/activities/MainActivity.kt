@@ -5,14 +5,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.trello.R
+import com.example.trello.adapters.BoardItemsAdapter
 import com.example.trello.constants.Constants
 import com.example.trello.databinding.ActivityMainBinding
 import com.example.trello.firebase.FireStoreClass
+import com.example.trello.models.Board
 import com.example.trello.models.User
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
@@ -25,6 +30,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
     companion object{
         const val MY_PROFILE_REQUEST_CODE: Int = 11
+        const val CREATE_BOARD_REQUEST_CODE = 12
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -34,17 +40,50 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         setupActionBar()
         binding?.navView?.setNavigationItemSelectedListener(this)
 
-        FireStoreClass().loadUserData(this)
+        FireStoreClass().loadUserData(this, true)
         buttonAddBoard()
 
     }
+
+    fun populateBoardListToUI(boardList: ArrayList<Board>){
+        hideProgressBar()
+        val rvBoards: RecyclerView = findViewById(R.id.rv_boards)
+        val tvNoRecords: TextView = findViewById(R.id.tv_no_boards_available)
+        if (boardList.size > 0){
+            rvBoards.visibility = View.VISIBLE
+            tvNoRecords.visibility = View.GONE
+            rvBoards.layoutManager = LinearLayoutManager(this)
+            rvBoards.setHasFixedSize(true)
+
+            val adapter: BoardItemsAdapter = BoardItemsAdapter(this, boardList)
+            rvBoards.adapter = adapter
+
+            adapter.setOnClickListener(object: BoardItemsAdapter.OnClickListener{
+                override fun onClick(position: Int, model: Board) {
+                    val intent = Intent(this@MainActivity, TaskListActivity::class.java)
+
+                    intent.putExtra(Constants.DOCUMENT_ID, model.documentID)
+
+                    startActivity(intent)
+                }
+            })
+        }
+        else{
+            rvBoards.visibility = View.GONE
+            tvNoRecords.visibility = View.VISIBLE
+        }
+
+
+    }
+
+
 
     private fun buttonAddBoard(){
         val fabAddBoard: FloatingActionButton = findViewById(R.id.fab_add_board)
         fabAddBoard.setOnClickListener{
             val intent = Intent(this, CreateBordActivity::class.java)
             intent.putExtra(Constants.NAME, mUserName)
-            startActivity(intent)
+            startActivityForResult(intent, CREATE_BOARD_REQUEST_CODE)
         }
     }
 
@@ -99,7 +138,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         doubleBackToExit()
     }
 
-    fun updateNavigationUserData(user: User) {
+    fun updateNavigationUserData(user: User, readBoardsList: Boolean) {
         val navUserImage: CircleImageView = findViewById(R.id.nav_user_image)
         val tvUsername: TextView = findViewById(R.id.tv_username)
         mUserName = user.name
@@ -112,13 +151,22 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
 
         tvUsername.text = user.name
 
+        if (readBoardsList){
+            showProgressDialog()
+            FireStoreClass().getBoardsList(this)
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(resultCode == Activity.RESULT_OK && requestCode == MY_PROFILE_REQUEST_CODE){
             FireStoreClass().loadUserData(this)
-        }else{
+        }else if(resultCode == Activity.RESULT_OK && requestCode == CREATE_BOARD_REQUEST_CODE){
+            FireStoreClass().getBoardsList(this)
+        }
+
+        else{
             Log.e("Cancelled", "Cancelled")
         }
     }

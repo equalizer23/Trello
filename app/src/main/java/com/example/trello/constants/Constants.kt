@@ -14,4 +14,6 @@ object Constants {
 
     const val GALLERY: Int = 1
 
+    const val TASK_LIST: String = "taskList"
+
 }

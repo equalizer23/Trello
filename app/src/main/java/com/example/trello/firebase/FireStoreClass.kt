@@ -88,7 +88,9 @@ class FireStoreClass : BaseActivity(){
             .get()
             .addOnSuccessListener {
                     document ->
-                activity.boardDetails(document.toObject(Board::class.java)!!)
+                val board =  document.toObject(Board::class.java)!!
+                board.documentID = document.id
+                activity.boardDetails(board)
             }
             .addOnFailureListener {
                 hideProgressBar()
@@ -109,5 +111,24 @@ class FireStoreClass : BaseActivity(){
                 activity.profileUpdatedFailure()
             }
     }
+
+    fun addUpdateTaskList(activity: TaskListActivity, board: Board){
+        val taskListHashMap = HashMap<String,Any>()
+        taskListHashMap[Constants.TASK_LIST] = board.taskList
+
+        mFireStore.collection(Constants.BOARDS)
+            .document(board.documentID)
+            .update(taskListHashMap)
+            .addOnSuccessListener {
+                activity.addTaskListSuccess()
+            }
+            .addOnFailureListener {
+                hideProgressBar()
+            }
+
+    }
+
+
+
 
 }

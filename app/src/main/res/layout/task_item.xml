@@ -33,6 +33,7 @@
             android:layout_margin="5dp"
             android:elevation="5dp"
             app:cardCornerRadius="5dp"
+            android:visibility="gone"
             tools:visibility="visible">
 
             <LinearLayout
@@ -48,7 +49,6 @@
                     android:background="?attr/selectableItemBackground"
                     android:src="@drawable/ic_cancel"
                     android:padding="10dp"
-                    android:visibility="gone"
                     tools:visibility="visible"
                     android:contentDescription="image"/>
 
@@ -68,7 +68,6 @@
                     android:background="?attr/selectableItemBackground"
                     android:src="@drawable/ic_done"
                     android:padding="10dp"
-                    android:visibility="gone"
                     tools:visibility="visible"
                     android:contentDescription="image"/>
 
@@ -98,7 +97,6 @@
                 android:background="@color/task_list_title_view_bg_color"
                 android:gravity="center"
                 android:elevation="10dp"
-                android:visibility="gone"
                 tools:visibility="visible">
 
                 <TextView
@@ -118,7 +116,6 @@
                     android:background="?attr/selectableItemBackground"
                     android:src="@drawable/ic_edit"
                     android:padding="10dp"
-                    android:visibility="gone"
                     tools:visibility="visible"
                     android:contentDescription="image"/>
 
@@ -129,12 +126,11 @@
                     android:background="?attr/selectableItemBackground"
                     android:src="@drawable/ic_delete"
                     android:padding="10dp"
-                    android:visibility="gone"
                     tools:visibility="visible"
                     android:contentDescription="image"/>
-                
+
             </LinearLayout>
-            
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
@@ -148,6 +144,7 @@
                 android:elevation="5dp"
                 android:layout_marginTop="5dp"
                 app:cardCornerRadius="5dp"
+                android:visibility="gone"
                 tools:visibility="visible">
 
                 <LinearLayout
@@ -163,7 +160,6 @@
                         android:background="?attr/selectableItemBackground"
                         android:src="@drawable/ic_cancel"
                         android:padding="10dp"
-                        android:visibility="gone"
                         tools:visibility="visible"
                         android:contentDescription="image"/>
 
@@ -183,7 +179,6 @@
                         android:background="?attr/selectableItemBackground"
                         android:src="@drawable/ic_done"
                         android:padding="10dp"
-                        android:visibility="gone"
                         tools:visibility="visible"
                         android:contentDescription="image"/>
 
@@ -205,6 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="5dp"
+                android:visibility="gone"
                 android:layout_marginTop="5dp"
                 app:cardCornerRadius="5dp"
                 tools:visibility="visible">
@@ -222,7 +218,6 @@
                         android:background="?attr/selectableItemBackground"
                         android:src="@drawable/ic_cancel"
                         android:padding="10dp"
-                        android:visibility="gone"
                         tools:visibility="visible"
                         android:contentDescription="image"/>
 
@@ -242,7 +237,6 @@
                         android:background="?attr/selectableItemBackground"
                         android:src="@drawable/ic_done"
                         android:padding="10dp"
-                        android:visibility="gone"
                         tools:visibility="visible"
                         android:contentDescription="image"/>
 
@@ -264,7 +258,7 @@
                 android:textColor="@color/colorAccent"
                 tools:visibility="visible"/>
 
-            
+
         </LinearLayout>
 
     </LinearLayout>

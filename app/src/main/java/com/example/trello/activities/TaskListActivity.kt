@@ -3,17 +3,20 @@ package com.example.trello.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.trello.R
 import com.example.trello.adapters.TaskListItemsAdapter
 import com.example.trello.constants.Constants
 import com.example.trello.databinding.ActivityTaskListBinding
 import com.example.trello.firebase.FireStoreClass
 import com.example.trello.models.Board
+import com.example.trello.models.Card
 import com.example.trello.models.Task
 
 class TaskListActivity : BaseActivity() {
     private var binding: ActivityTaskListBinding? = null
     private lateinit var mBoardDetails: Board
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTaskListBinding.inflate(layoutInflater)
@@ -98,4 +101,30 @@ class TaskListActivity : BaseActivity() {
     }
 
 
+    fun addCardToTaskList(position: Int, cardName: String){
+        mBoardDetails.taskList.removeAt(mBoardDetails.taskList.size - 1)
+
+        val cardAssignedUsersList: ArrayList<String> = ArrayList()
+
+        cardAssignedUsersList.add(FireStoreClass().getCurrentUserId())
+
+        val userId: String = FireStoreClass().getCurrentUserId()
+
+        val card = Card(cardName, userId, cardAssignedUsersList)
+
+        val cardsList = mBoardDetails.taskList[position].cardsList
+        cardsList.add(card)
+
+        val task = Task(
+            mBoardDetails.taskList[position].title,
+            mBoardDetails.taskList[position].createdBy,
+            cardsList
+        )
+
+        mBoardDetails.taskList[position] = task
+
+        showProgressDialog()
+
+        FireStoreClass().addUpdateTaskList(this, mBoardDetails)
+    }
 }

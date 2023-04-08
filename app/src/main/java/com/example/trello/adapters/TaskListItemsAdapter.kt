@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -27,11 +28,11 @@ open class TaskListItemsAdapter(
         val layoutParams = LinearLayout.LayoutParams(
             (parent.width * 0.7).toInt(), LinearLayout.LayoutParams.WRAP_CONTENT
         )
+
         layoutParams.setMargins(
             (15.toDp().toPx()), 0, (40.toDp().toPx()), 0)
 
         view.layoutParams = layoutParams
-
         return MyViewHolder(view)
     }
 
@@ -103,6 +104,30 @@ open class TaskListItemsAdapter(
             holder.ibDeleteListName.setOnClickListener {
                 alertDialogForDeleteList(position, model.title)
             }
+
+            holder.tvAddCard.setOnClickListener {
+                holder.cvAddCard.visibility = View.VISIBLE
+                holder.tvAddCard.visibility = View.GONE
+            }
+
+            holder.ibCloseCardName.setOnClickListener {
+                holder.tvAddCard.visibility = View.VISIBLE
+                holder.cvAddCard.visibility = View.GONE
+            }
+
+            holder.ibDoneCardName.setOnClickListener {
+                val cardName = holder.etCardName.text.toString()
+                if(cardName.isNotEmpty()){
+                    if(context is TaskListActivity){
+                        context.addCardToTaskList(position, cardName)
+                    }
+                }
+                else{
+                    Toast.makeText(
+                        context, "Name cannot be empty", Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
     }
 
@@ -153,7 +178,10 @@ open class TaskListItemsAdapter(
         val ibCloseEditableView: ImageButton = view.findViewById(R.id.ib_edit_close_list_name)
         val ibEditDoneListName: ImageButton = view.findViewById(R.id.ib_edit_done_list_name)
         val ibDeleteListName: ImageButton = view.findViewById(R.id.ib_delete_list_name)
-
-
+        val tvAddCard: TextView = view.findViewById(R.id.tv_add_card)
+        val cvAddCard: CardView = view.findViewById(R.id.cv_add_card)
+        val ibCloseCardName: ImageButton = view.findViewById(R.id.ib_close_card_name)
+        val ibDoneCardName: ImageButton = view.findViewById(R.id.ib_done_card_name)
+        val etCardName: EditText = view.findViewById(R.id.et_card_name)
     }
 }

@@ -2,6 +2,7 @@ package com.example.trello.firebase
 
 import android.app.Activity
 import android.util.Log
+import android.widget.Toast
 import com.example.trello.activities.CreateBordActivity
 import com.example.trello.activities.*
 import com.example.trello.constants.Constants
@@ -126,6 +127,24 @@ class FireStoreClass : BaseActivity(){
                 hideProgressBar()
             }
 
+    }
+
+    fun getAssignedMembersListDetails(activity: MembersActivity, assignedTo: ArrayList<String>){
+        mFireStore.collection(Constants.USERS)
+            .whereIn(Constants.ID, assignedTo)
+            .get()
+            .addOnSuccessListener {
+                document ->
+                val usersList: ArrayList<User> = ArrayList()
+                for (i in document.documents){
+                    val user = i.toObject(User::class.java)!!
+                    usersList.add(user)
+                }
+                activity.setupMembersList(usersList)
+            }
+            .addOnFailureListener {
+                showErrorSnackBar("Something went wrong")
+            }
     }
 
 

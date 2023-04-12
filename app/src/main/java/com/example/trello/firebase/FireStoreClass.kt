@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.trello.activities.CreateBordActivity
 import com.example.trello.activities.*
+import com.example.trello.adapters.MembersItemsAdapter
 import com.example.trello.constants.Constants
 import com.example.trello.models.Board
 import com.example.trello.models.User
@@ -113,7 +114,7 @@ class FireStoreClass : BaseActivity(){
             }
     }
 
-    fun addUpdateTaskList(activity: TaskListActivity, board: Board){
+    fun addUpdateTaskList(activity: Activity, board: Board){
         val taskListHashMap = HashMap<String,Any>()
         taskListHashMap[Constants.TASK_LIST] = board.taskList
 
@@ -121,7 +122,12 @@ class FireStoreClass : BaseActivity(){
             .document(board.documentID)
             .update(taskListHashMap)
             .addOnSuccessListener {
-                activity.addTaskListSuccess()
+                if(activity is TaskListActivity){
+                    activity.addTaskListSuccess()
+                }
+                else if (activity is CardDetailsActivity){
+                    activity.addTaskListSuccess()
+                }
             }
             .addOnFailureListener {
                 hideProgressBar()
@@ -148,6 +154,41 @@ class FireStoreClass : BaseActivity(){
     }
 
 
+    fun getMemberDetails(activity: MembersActivity, email: String){
+        mFireStore.collection(Constants.USERS)
+            .whereEqualTo(Constants.EMAIL, email)
+            .get()
+            .addOnSuccessListener {
+                document ->
+                if(document.documents.size > 0){
+                    val user = document.documents[0].toObject(User::class.java)!!
+                    activity.memberDetails(user)
+                }
+                else{
+                    activity.hideProgressBar()
+                    showErrorSnackBar("No such member found")
+                }
+            }
+            .addOnFailureListener {
+                showErrorSnackBar("Something went wrong")
+            }
+    }
+
+    fun assignMemberToBoard(activity: MembersActivity, board: Board, user: User){
+        val assignedToHashMap = HashMap<String, Any>()
+        assignedToHashMap[Constants.ASSIGNED_TO] = board.assignedTo
+
+        mFireStore.collection(Constants.BOARDS)
+            .document(board.documentID)
+            .update(assignedToHashMap)
+            .addOnSuccessListener {
+                activity.memberAssignAccess(user)
+            }
+            .addOnFailureListener {
+                activity.hideProgressBar()
+                showErrorSnackBar("Something went wrong")
+            }
+    }
 
 
 }

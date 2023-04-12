@@ -6,7 +6,7 @@ import android.os.Parcelable
 data class Task(
     var title: String = "",
     val createdBy: String = "",
-    val cardsList: ArrayList<Card> = ArrayList()
+    var cardsList: ArrayList<Card> = ArrayList()
 ): Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString()!!,

@@ -1,8 +1,10 @@
 package com.example.trello.activities
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +21,7 @@ import com.example.trello.models.Task
 class TaskListActivity : BaseActivity() {
     private var binding: ActivityTaskListBinding? = null
     private lateinit var mBoardDetails: Board
+    private lateinit var mBoardDocumentID: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,11 +31,32 @@ class TaskListActivity : BaseActivity() {
         var boardDocumentId: String = ""
 
         if(intent.hasExtra(Constants.DOCUMENT_ID)){
-            boardDocumentId = intent.getStringExtra(Constants.DOCUMENT_ID)!!
+            mBoardDocumentID = intent.getStringExtra(Constants.DOCUMENT_ID)!!
         }
 
         showProgressDialog()
-        FireStoreClass().getBoardDetails(this, boardDocumentId)
+        FireStoreClass().getBoardDetails(this, mBoardDocumentID)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && requestCode == Constants.MEMBER_REQUEST_CODE
+            || requestCode == Constants.CARD_DETAILS_REQUEST_CODE){
+
+            showProgressDialog()
+            FireStoreClass().getBoardDetails(this, mBoardDocumentID)
+        }
+        else{
+            Log.e("Cancelled", "Cancelled")
+        }
+    }
+
+    fun cardDetails(taskListPosition: Int, cardPosition: Int){
+        val intent = Intent(this, CardDetailsActivity::class.java)
+        intent.putExtra(Constants.BOARD_DETAIL, mBoardDetails)
+        intent.putExtra(Constants.TASK_LIST_ITEM_POSITION, taskListPosition)
+        intent.putExtra(Constants.CARD_LIST_ITEM_POSITION, cardPosition)
+        startActivityForResult(intent, Constants.CARD_DETAILS_REQUEST_CODE)
     }
 
     fun addTaskListSuccess(){
@@ -141,7 +165,7 @@ class TaskListActivity : BaseActivity() {
             R.id.action_members ->{
                 val intent = Intent(this, MembersActivity::class.java)
                 intent.putExtra(Constants.BOARD_DETAIL, mBoardDetails)
-                startActivity(intent)
+                startActivityForResult(intent, Constants.MEMBER_REQUEST_CODE)
             }
         }
         return super.onOptionsItemSelected(item)

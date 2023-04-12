@@ -35,6 +35,12 @@ class CardsListAdapter(private val context: Context, private val cardsList: Arra
 
         if(holder is ViewHolder){
             holder.tvCardName.text = model.title
+
+            holder.itemView.setOnClickListener{
+                if(onClickListener != null){
+                    onClickListener!!.onClick(position, )
+                }
+            }
         }
     }
 
@@ -43,7 +49,7 @@ class CardsListAdapter(private val context: Context, private val cardsList: Arra
     }
 
     interface OnClickListener{
-        fun onClick(position: Int, card: Card)
+        fun onClick(position: Int)
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view){

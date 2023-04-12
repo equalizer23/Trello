@@ -112,6 +112,7 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
             R.id.nav_my_profile ->{
                 val intent = Intent(this, ProfileActivity::class.java)
                 startActivityForResult(intent, MY_PROFILE_REQUEST_CODE)
+
             }
             R.id.nav_sign_out ->{
                 FirebaseAuth.getInstance().signOut()

@@ -66,8 +66,8 @@ class ProfileActivity : BaseActivity() {
             anyChangesMade = true
         }
 
-        if(binding?.etMobile?.text.toString() != mUserDetails?.mobile.toString()){
-            userHashMap[Constants.MOBILE] = binding?.etMobile?.text.toString().toLong()
+        if(binding?.etMobile?.text.toString() != mUserDetails?.mobile){
+            userHashMap[Constants.MOBILE] = binding?.etMobile?.text.toString()
             anyChangesMade = true
         }
 
@@ -86,8 +86,8 @@ class ProfileActivity : BaseActivity() {
 
         binding?.etName?.setText(user.name)
         binding?.etEmail?.setText(user.email)
-        if (user.mobile != 0L){
-            binding?.etMobile?.setText(user.mobile.toString())
+        if (user.mobile != "0"){
+            binding?.etMobile?.setText(user.mobile)
         }
 
     }

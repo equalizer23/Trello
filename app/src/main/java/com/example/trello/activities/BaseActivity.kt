@@ -10,6 +10,7 @@ import com.example.trello.R
 import com.example.trello.databinding.ActivityBaseBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.auth.User
 
 open class BaseActivity : AppCompatActivity() {
     private var binding: ActivityBaseBinding? = null
@@ -70,4 +71,5 @@ open class BaseActivity : AppCompatActivity() {
         }
         return currentUserID
     }
+
 }

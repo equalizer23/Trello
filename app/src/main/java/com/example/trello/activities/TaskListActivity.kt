@@ -17,11 +17,14 @@ import com.example.trello.firebase.FireStoreClass
 import com.example.trello.models.Board
 import com.example.trello.models.Card
 import com.example.trello.models.Task
+import com.example.trello.models.User
+import java.net.UnknownServiceException
 
 class TaskListActivity : BaseActivity() {
     private var binding: ActivityTaskListBinding? = null
     private lateinit var mBoardDetails: Board
     private lateinit var mBoardDocumentID: String
+    lateinit var mAssignedMembersList: ArrayList<User>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +59,7 @@ class TaskListActivity : BaseActivity() {
         intent.putExtra(Constants.BOARD_DETAIL, mBoardDetails)
         intent.putExtra(Constants.TASK_LIST_ITEM_POSITION, taskListPosition)
         intent.putExtra(Constants.CARD_LIST_ITEM_POSITION, cardPosition)
+        intent.putExtra(Constants.BOARD_MEMBERS_LIST, mBoardDetails.assignedTo)
         startActivityForResult(intent, Constants.CARD_DETAILS_REQUEST_CODE)
     }
 
@@ -72,15 +76,8 @@ class TaskListActivity : BaseActivity() {
         hideProgressBar()
         setupActionBar()
 
-        val addTaskList = Task("Add List")
-        board.taskList.add(addTaskList)
-
-        binding?.rvTaskList?.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
-        binding?.rvTaskList?.setHasFixedSize(true)
-        val adapter = TaskListItemsAdapter(this, board.taskList)
-        binding?.rvTaskList?.adapter = adapter
+        showProgressDialog()
+        FireStoreClass().getAssignedMembersListDetails(this, mBoardDetails.assignedTo)
     }
 
     private fun setupActionBar(){
@@ -153,6 +150,22 @@ class TaskListActivity : BaseActivity() {
         showProgressDialog()
 
         FireStoreClass().addUpdateTaskList(this, mBoardDetails)
+    }
+
+    fun boardMembersDetailsList(list: ArrayList<User>){
+        mAssignedMembersList = list
+
+        hideProgressBar()
+
+        val addTaskList = Task("Add List")
+        mBoardDetails.taskList.add(addTaskList)
+
+        binding?.rvTaskList?.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+
+        binding?.rvTaskList?.setHasFixedSize(true)
+        val adapter = TaskListItemsAdapter(this, mBoardDetails.taskList)
+        binding?.rvTaskList?.adapter = adapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

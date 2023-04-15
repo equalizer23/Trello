@@ -135,7 +135,7 @@ class FireStoreClass : BaseActivity(){
 
     }
 
-    fun getAssignedMembersListDetails(activity: MembersActivity, assignedTo: ArrayList<String>){
+    fun getAssignedMembersListDetails(activity: Activity, assignedTo: ArrayList<String>){
         mFireStore.collection(Constants.USERS)
             .whereIn(Constants.ID, assignedTo)
             .get()
@@ -146,7 +146,15 @@ class FireStoreClass : BaseActivity(){
                     val user = i.toObject(User::class.java)!!
                     usersList.add(user)
                 }
-                activity.setupMembersList(usersList)
+                if(activity is MembersActivity){
+                    activity.setupMembersList(usersList)
+                }
+                else if(activity is TaskListActivity){
+                    activity.boardMembersDetailsList(usersList)
+                }
+                else if(activity is CardDetailsActivity){
+                    activity.setupSelectedMembersList(usersList)
+                }
             }
             .addOnFailureListener {
                 showErrorSnackBar("Something went wrong")

@@ -28,6 +28,16 @@
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/item_card_members_text_size"
             tools:text="Card Name" />
+        
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_card_selected_members_list"
+            android:layout_marginTop="@dimen/card_details_value_marginTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"/>
 
         <TextView
             android:id="@+id/tv_members_name"
